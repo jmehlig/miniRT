@@ -6,7 +6,7 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 21:11:00 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/07 14:09:41 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/07 15:42:55 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void free_sphere(t_list **sphere_list)
 		temp = *sphere_list;
         sphere = (*sphere_list)->content;
         if (sphere->center)
-            free(sphere->center);
+            ft_free(sphere->center);
         if (sphere->colors)
-            free(sphere->colors);
+            ft_free(sphere->colors);
 		*sphere_list = (*sphere_list)->next;
 		ft_lstdelnode(sphere_list, temp->content);
 	}
@@ -40,11 +40,11 @@ void free_plane(t_list **plane_list)
 		temp = *plane_list;
         plane = (*plane_list)->content;
         if (plane->coordinates)
-            free(plane->coordinates);
+            ft_free(plane->coordinates);
         if (plane->orientation)
-            free(plane->orientation);
+            ft_free(plane->orientation);
         if (plane->colors)
-            free(plane->colors);
+            ft_free(plane->colors);
 		*plane_list = (*plane_list)->next;
 		ft_lstdelnode(plane_list, temp->content);
 	}
@@ -60,11 +60,11 @@ void free_cylinder(t_list **cylinder_list)
 		temp = *cylinder_list;
         cylinder = (*cylinder_list)->content;
         if (cylinder->coordinates)
-            free(cylinder->coordinates);
+            ft_free(cylinder->coordinates);
         if (cylinder->orientation)
-            free(cylinder->orientation);
+            ft_free(cylinder->orientation);
         if (cylinder->colors)
-            free(cylinder->colors);
+            ft_free(cylinder->colors);
 		*cylinder_list = (*cylinder_list)->next;
 		ft_lstdelnode(cylinder_list, temp->content);
 	}

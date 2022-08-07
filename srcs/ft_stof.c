@@ -6,14 +6,13 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:54:49 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/06 23:08:38 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/07 17:18:47 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
 //convert string to float
-// ACHTUNG!! 3.04qwe wird nicht richtig erkannt!!!
 
 static long ft_power(int base, int exponent)
 {
@@ -61,8 +60,10 @@ static float ft_convert(int deci_places, char *tmp, char *tmp2)
     power = int1 * ft_power(10, deci_places);
     power = power + int2;
     result = (float)power / (float)(ft_power(10, deci_places));
-    free (tmp);
-    free (tmp2);
+    if (ft_strncmp(tmp, "-0", 2) == 0)
+        result = -result;
+    ft_free(tmp);
+    ft_free(tmp2);
     return (result);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 14:01:55 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/07 13:53:34 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/07 15:49:43 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,32 +78,33 @@ typedef struct s_scene
 }   t_scene;
 
 //exit.c
-void simple_error_free(t_scene *scene);
-void text_error_free(char *str, t_scene *scene);
+void simple_error_free(t_scene *scene, char **split_line, int fd);
+void text_error_free(char *str, t_scene *scene, char **split_line, int fd);
 void simple_error();
 void text_error(char *str);
 
 //parser.c
-t_scene *in_scene(t_scene *scene, char *tmp);
+t_scene *in_scene(t_scene *scene, char **split_line, int fd);
 t_scene *readfile(t_scene *scene, int fd);
 void parser(t_scene *scene, char *argv);
 
 //parser_setting.c
-t_scene *parse_ambi_light(t_scene *scene, char **line_split);
-t_scene *parse_camera(t_scene *scene, char **line_split);
-t_scene *parse_light(t_scene *scene, char **line_split);
+t_scene *parse_ambi_light(t_scene *scene, char **line_split, int fd);
+t_scene *parse_camera(t_scene *scene, char **line_split, int fd);
+t_scene *parse_light(t_scene *scene, char **line_split, int fd);
 
 //parser_figures.c
 void	free_content(void *content);
-t_scene *parse_sphere(t_scene *scene, char **line_split);
-t_scene *parse_plane(t_scene *scene, char **line_split);
-t_scene *parse_cylinder(t_scene *scene, char **line_split);
+t_scene *parse_sphere(t_scene *scene, char **line_split, int fd);
+t_scene *parse_plane(t_scene *scene, char **line_split, int fd);
+t_scene *parse_cylinder(t_scene *scene, char **line_split, int fd);
 
 //ft_stof.c
 bool ft_string_digit(char *str);
 float ft_stof(char *str);
 
 //parser_utils.c
+void set_scene_null(t_scene *scene);
 bool ft_bit_range(int array[3]);
 bool ft_unit_range(float array[3]);
 int *parse_color(char **line_split, int i);

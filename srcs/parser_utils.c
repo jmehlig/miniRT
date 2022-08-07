@@ -6,11 +6,23 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 16:51:01 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/06 22:38:30 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/07 15:39:45 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+void set_scene_null(t_scene *scene)
+{
+    scene->ambi_light.colors= NULL;
+    scene->camera.view = NULL;
+    scene->camera.orientation = NULL;
+    scene->light.coordinates = NULL;
+    scene->light.colors = NULL;
+    scene->sphere = NULL;
+    scene->plane = NULL;
+    scene->cylinder = NULL;
+}
 
 bool ft_bit_range(int array[3])
 {
@@ -41,7 +53,7 @@ int *parse_color(char **line_split, int i)
     int *colors;
     char **split_colors;
 
-    colors = malloc(sizeof(int *) * 3);
+    colors = malloc(sizeof(int) * 3);
     if (!colors)
         simple_error();
     split_colors = ft_split(line_split[i], ',');
@@ -59,7 +71,7 @@ float *split_coordinates(char *str)
     char **split_coord;
     float *coordinates;
     
-    coordinates = malloc(sizeof(float *) * 3);
+    coordinates = malloc(sizeof(float) * 3);
     if (!coordinates)
         simple_error();
     split_coord = ft_split(str, ',');
