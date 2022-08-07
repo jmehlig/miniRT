@@ -6,13 +6,25 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 14:33:30 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/06 22:16:01 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/07 13:54:05 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
 //free in the errors!!!!
+
+void simple_error_free(t_scene *scene)
+{
+    free(&scene);
+    simple_error();
+}
+
+void text_error_free(char *str, t_scene *scene)
+{
+    free(&scene);
+    text_error(str);
+}
 
 void simple_error(void)
 {

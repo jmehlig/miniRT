@@ -6,7 +6,7 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 14:01:55 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/06 22:00:39 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/07 13:53:34 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ typedef struct s_light
 
 typedef struct s_sphere
 {
-    float *center; //malloc
+    float *center; //malloc - free_sphere
     float diameter;
-    int *colors; //malloc
+    int *colors; //malloc - free_sphere
 }   t_sphere;
 
 typedef struct s_plane
@@ -78,6 +78,8 @@ typedef struct s_scene
 }   t_scene;
 
 //exit.c
+void simple_error_free(t_scene *scene);
+void text_error_free(char *str, t_scene *scene);
 void simple_error();
 void text_error(char *str);
 
@@ -92,6 +94,7 @@ t_scene *parse_camera(t_scene *scene, char **line_split);
 t_scene *parse_light(t_scene *scene, char **line_split);
 
 //parser_figures.c
+void	free_content(void *content);
 t_scene *parse_sphere(t_scene *scene, char **line_split);
 t_scene *parse_plane(t_scene *scene, char **line_split);
 t_scene *parse_cylinder(t_scene *scene, char **line_split);
@@ -101,7 +104,6 @@ bool ft_string_digit(char *str);
 float ft_stof(char *str);
 
 //parser_utils.c
-void	free_content(void *content);
 bool ft_bit_range(int array[3]);
 bool ft_unit_range(float array[3]);
 int *parse_color(char **line_split, int i);
@@ -111,6 +113,9 @@ float *split_coordinates(char *str);
 void put_scene(t_scene scene);
 
 //free.c
-void free_scene(t_scene *scene);
+void free_sphere(t_list **sphere_list);
+void free_plane(t_list **plane_list);
+void free_cylinder(t_list **cylinder_list);
+void free_scene(t_scene **scene);
 
 #endif

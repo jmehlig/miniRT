@@ -6,7 +6,7 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 14:01:05 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/06 22:27:09 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/07 14:03:03 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,14 @@
 int main(int argc, char *argv[])
 {
     t_scene scene;
+    t_scene *scene_free;
 
     if (argc != 2)
         text_error("Not the right input - must be of form ./minirt file.rt\n");
     parser(&scene, argv[1]);
     put_scene(scene);
-    //free_scene(&scene);
+    scene_free = &scene;
+    free_scene(&scene_free);
+    system("leaks minirt");
     return (0);
 }
