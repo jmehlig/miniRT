@@ -6,7 +6,7 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 15:54:49 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/07 17:18:47 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/07 18:30:00 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool ft_string_digit(char *str)
     {
         if (!ft_isdigit(str[i]) && str[i] != '\n')
         {
-            printf("'%c'\n", str[i]);
+            //printf("'%c'\n", str[i]);
             return (false);
         }
         i++;
@@ -51,14 +51,24 @@ static float ft_convert(int deci_places, char *tmp, char *tmp2)
     int   int1;
     int   int2;
 
-    if (!ft_string_digit(tmp2))
+    if (!ft_string_digit(tmp2)) //more free???
+    {
+        ft_free(tmp);
+        ft_free(tmp2);
         text_error("Float input is wrong");
+    }
     int1 = ft_atoi(tmp);
     int2 = ft_atoi(tmp2);
-    //printf("%d ", int1);
-    //printf("%i\n", int2);
+    printf("%d ", int1);
+    printf("%i ", int2);
+    printf("%i ", deci_places);
+    printf("%ld ", ft_power(10, deci_places));
     power = int1 * ft_power(10, deci_places);
-    power = power + int2;
+    if (power > 0)
+        power = power + int2;
+    else
+        power = power - int2;
+    printf("%ld\n", power);
     result = (float)power / (float)(ft_power(10, deci_places));
     if (ft_strncmp(tmp, "-0", 2) == 0)
         result = -result;

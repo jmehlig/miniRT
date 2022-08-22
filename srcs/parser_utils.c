@@ -6,7 +6,7 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 16:51:01 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/07 15:39:45 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/07 18:22:12 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,11 @@ int *parse_color(char **line_split, int i)
         simple_error();
     split_colors = ft_split(line_split[i], ',');
     if (!split_colors[0] || !split_colors[1] || !split_colors[2] || split_colors[3])
+    {
+        ft_free(colors);
+        ft_split_del(&split_colors);
         return (NULL);
+    }
     colors[0] = ft_atoi(split_colors[0]);
     colors[1] = ft_atoi(split_colors[1]);
     colors[2] = ft_atoi(split_colors[2]);

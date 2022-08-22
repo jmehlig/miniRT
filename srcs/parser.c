@@ -6,7 +6,7 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 14:50:04 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/07 15:47:17 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/07 18:01:44 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 t_scene *in_scene(t_scene *scene, char **split_line, int fd)
 {
-    if (ft_strncmp(split_line[0], "A", 1) == 0)
+    if (ft_strncmp(split_line[0], "A", 2) == 0)
         scene = parse_ambi_light(scene, split_line, fd);
-    else if (ft_strncmp(split_line[0], "C", 1) == 0)
+    else if (ft_strncmp(split_line[0], "C", 2) == 0)
         scene = parse_camera(scene, split_line, fd);
-    else if (ft_strncmp(split_line[0], "L", 1) == 0)
+    else if (ft_strncmp(split_line[0], "L", 2) == 0)
         scene = parse_light(scene, split_line, fd);
-    else if (ft_strncmp(split_line[0], "sp", 2) == 0)
+    else if (ft_strncmp(split_line[0], "sp", 3) == 0)
         scene = parse_sphere(scene, split_line, fd);
-    else if (ft_strncmp(split_line[0], "pl", 2) == 0)
+    else if (ft_strncmp(split_line[0], "pl", 3) == 0)
         scene = parse_plane(scene, split_line, fd);
-    else if (ft_strncmp(split_line[0], "cy", 2) == 0)
+    else if (ft_strncmp(split_line[0], "cy", 3) == 0)
         scene = parse_cylinder(scene, split_line, fd);
     else if (ft_strncmp(split_line[0], "\n", 1) == 0)
         split_line[0][0] = '\n'; //do nothing

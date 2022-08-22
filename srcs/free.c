@@ -6,7 +6,7 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 21:11:00 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/07 15:42:55 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/07 18:06:08 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void free_sphere(t_list **sphere_list)
 {
     t_list	*temp;
     t_sphere *sphere;
+
 
 	while ((*sphere_list))
 	{
