@@ -6,7 +6,7 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 16:51:01 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/07 18:22:12 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/08/22 15:45:08 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ bool ft_unit_range(float array[3])
         return (false);
     else if (ft_f_less_f(array[2], -1.0) || ft_f_greater_f(array[2], 1.0))
         return (false);
-    else
-        return (true);
+    else if (array[0] * array[0] + array[1] * array[1] + array[2] * array[2] != 1)
+        return (false);
+    return (true);
 }
 
 int *parse_color(char **line_split, int i)
