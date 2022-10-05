@@ -33,21 +33,21 @@ bool	same_point(t_vector *ray, t_dist *d, t_scene scene, t_dist *shadow)
 }
 
 //what is about colors of the light??
-// 
+// get the color, while having it multiplied with a ratio from 0-1, depending on the ambient lightning and the direct lightning
 float compute_lighting(t_dist *d, t_scene scene, t_vector *ray, t_dist *shadow)
 {
     float       i;
     float       n_dot_l;
     t_vector    *l;
 
-	i = scene.ambi_light.ratio;
-    l = subtract_vec(scene.light.coordinates, d->p);
-    n_dot_l = dot_prod_vec(d->n, l);
+	i = scene.ambi_light.ratio; //The ambient lightning is the ground value for that ratio
+    l = subtract_vec(scene.light.coordinates, d->p); //vector between the light source and the point
+    n_dot_l = dot_prod_vec(d->n, l); //n is the normal vector in that point
 	same_point(ray, d, scene, shadow);
-    if (n_dot_l > 0) // if (n_dot_l > 0 && same_point(ray, d, scene, shadow))
+    if (n_dot_l > 0) // if (n_dot_l > 0 && same_point(ray, d, scene, shadow)) // if n_dot_l is not posiive we're on the not light side of an object
         i += scene.light.brightness * n_dot_l/(len_vec(d->n) * len_vec(l));
     ft_free(l);
-    if (i > 1)
+    if (i > 1) // the ratio can only be 1 max
         return (1);
     return (i);
 }
@@ -79,7 +79,7 @@ static void	draw_sphere(t_scene scene, t_vector *ray, t_dist *d)
 				ft_free(d->n);
 			}
 			d->p = scalar_multi(ray, d->min_dist);
-			d->n = subtract_vec( d->p, sphere->center);
+			d->n = subtract_vec(d->p, sphere->center);
 			norm_vec(d->n);
 			// d->light = compute_lighting(d->p, d->n, scene.light, scene.ambi_light);
 			// if (d->closest_col != NULL)
