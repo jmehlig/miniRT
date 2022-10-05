@@ -21,21 +21,19 @@ bool	same_point(t_vector *ray, t_dist *d, t_scene scene, t_dist *shadow)
 
 	is_same = false;
 	temp = scalar_multi(ray, d->min_dist); //ray ist normalized
-	point = add_vec(temp, scene.camera.origin);
+	point = add_vec(temp, scene.camera.origin); // getting the actual point we want to set the pixel for
 	ft_free (temp);
-	temp = subtract_vec(point, scene.light.coordinates);
+	temp = subtract_vec(point, scene.light.coordinates); // now compute te vector between this point and the light
 	//printf("%f %f", shadow->min_dist, len_vec(temp));
-	if (ft_compare_float(shadow->min_dist, len_vec(temp)) == 0)
-		is_same = true;
+	if (ft_compare_float(shadow->min_dist, len_vec(temp)) == 0) // if the length of that vector is the same as the shortest distance coming from the light, it is closest to the light
+		is_same = true; // The point we want to set is not in the shadow
 	ft_free (temp);
 	ft_free (point);
 	return (is_same);
-	// kann ich die Laenge dieses Vectors mit d->l_dist vergleichen????
-	//norm (temp);
-	// hier jetzt den Punkt der am naechsten vom Licht aus liegt
 }
 
 //what is about colors of the light??
+// 
 float compute_lighting(t_dist *d, t_scene scene, t_vector *ray, t_dist *shadow)
 {
     float       i;
@@ -46,7 +44,7 @@ float compute_lighting(t_dist *d, t_scene scene, t_vector *ray, t_dist *shadow)
     l = subtract_vec(scene.light.coordinates, d->p);
     n_dot_l = dot_prod_vec(d->n, l);
 	same_point(ray, d, scene, shadow);
-    if (n_dot_l > 0)
+    if (n_dot_l > 0) // if (n_dot_l > 0 && same_point(ray, d, scene, shadow))
         i += scene.light.brightness * n_dot_l/(len_vec(d->n) * len_vec(l));
     ft_free(l);
     if (i > 1)
@@ -151,18 +149,21 @@ static void draw_cylinder(t_scene scene, t_vector *ray, t_dist *d)
 	}
 }
 
+//This function should work exactly like the raytracing with objects looking from the camera.
+// First we create a new camera object, that is at the place of the lightning
 void	get_shadow(t_scene scene, t_dist *d, t_dist *shadow, t_vector *ray)
 {
 	t_vector	*temp;
 	t_vector	*point;
 
-	temp = scalar_multi(ray, d->min_dist); // das geht vom Ursprung aus?
-	point = add_vec(temp, scene.camera.origin);
+	temp = scalar_multi(ray, d->min_dist); // calculating the vector pointing from the camera to the closest seen point of an object
+	point = add_vec(temp, scene.camera.origin); //adding this to the camera results in the actual point
 	ft_free (temp);
-	scene.camera.origin = scene.light.coordinates;
-	scene.camera.fov = 90; // ---> ist egal
-	scene.camera.direction = subtract_vec(point, scene.light.coordinates);
+	scene.camera.origin = scene.light.coordinates; // The new camera resides at the place of the light
+	scene.camera.fov = 90; //doesn't really matter
+	scene.camera.direction = subtract_vec(point, scene.light.coordinates); //looking in the direction of the point
 	norm_vec(scene.camera.direction);
+	// now do the same thing as for the original raytracing, but with the new camera and shadow
 	if (scene.sphere)
 		draw_sphere(scene, scene.camera.direction, shadow);
 	if (scene.plane)
@@ -175,7 +176,10 @@ void	get_shadow(t_scene scene, t_dist *d, t_dist *shadow, t_vector *ray)
 }
 
 //get_color_sphere - gives the color of the background or the one of the sphere back, look into it, to adapt to other figures
-// also keep track of the closest object up to date, to know, which pixel to actaully put in the end
+// also keep track of the closest object up to date, to know, which pixel to actually put in the end
+// Added the get shadow function
+// Additionally, now, the adding of the ambient light is done in this function, the color that gets stored in closest_col is only the one of the closest object
+// The vectors n and p, needed to calculate the lighting, are also stored in t_dist(d)
 int	get_color(t_scene scene, t_vector *ray)
 {
 	t_dist *d;
@@ -194,7 +198,7 @@ int	get_color(t_scene scene, t_vector *ray)
 		draw_cylinder(scene, ray, d);
 	if (d->min_dist)
 	{
-		get_shadow(scene, d, shadow, ray);
+		get_shadow(scene, d, shadow, ray); //shadow is a t_dist pointer, and should now have the shortest direction to any object stored in min_dist
 		d->light = compute_lighting(d, scene, ray, shadow);
 		d->closest_col = scalar_multi_colors(d->closest_col, d->light);
 		color = create_rgb(d->closest_col[0], d->closest_col[1],
