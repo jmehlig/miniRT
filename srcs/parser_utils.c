@@ -6,22 +6,28 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 16:51:01 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/22 15:45:08 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/09/16 04:42:03 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-void set_scene_null(t_scene *scene)
+void set_scene_null(t_scene *scene, t_graphic *graphic)
 {
     scene->ambi_light.colors= NULL;
-    scene->camera.view = NULL;
-    scene->camera.orientation = NULL;
+    scene->camera.origin =  NULL;
+    scene->camera.direction = NULL;
     scene->light.coordinates = NULL;
     scene->light.colors = NULL;
     scene->sphere = NULL;
     scene->plane = NULL;
     scene->cylinder = NULL;
+    graphic->mlx = NULL;
+    graphic->img = NULL;
+    scene->vp.height = 0;
+    scene->vp.width = 0;
+    scene->vp.x_pix = 0;
+    scene->vp.y_pix = 0;  
 }
 
 bool ft_bit_range(int array[3])
@@ -36,16 +42,17 @@ bool ft_bit_range(int array[3])
         return (true);
 }
 
-bool ft_unit_range(float array[3])
+//this should also look for normalized??
+bool ft_unit_range(t_vector *vec)
 {
-    if (ft_f_less_f(array[0], -1.0) || ft_f_greater_f(array[0], 1.0))
+    if (ft_f_less_f(vec->x, -1.0) || ft_f_greater_f(vec->x, 1.0))
         return (false);
-    else if (ft_f_less_f(array[1], -1.0) || ft_f_greater_f(array[1], 1.0))
+    else if (ft_f_less_f(vec->y, -1.0) || ft_f_greater_f(vec->y, 1.0))
         return (false);
-    else if (ft_f_less_f(array[2], -1.0) || ft_f_greater_f(array[2], 1.0))
+    else if (ft_f_less_f(vec->z, -1.0) || ft_f_greater_f(vec->z, 1.0))
         return (false);
-    else if (array[0] * array[0] + array[1] * array[1] + array[2] * array[2] != 1)
-        return (false);
+    else if (vec->x * vec->x + vec->y * vec->y + vec->z * vec->z != 1)
+        norm_vec(vec);
     return (true);
 }
 
@@ -71,20 +78,20 @@ int *parse_color(char **line_split, int i)
     return (colors);
 }
 
-float *split_coordinates(char *str)
+t_vector *split_coordinates(char *str)
 {
     char **split_coord;
-    float *coordinates;
+    t_vector *coordinates;
     
-    coordinates = malloc(sizeof(float) * 3);
+    coordinates = malloc(sizeof(t_vector *));
     if (!coordinates)
-        simple_error();
+        return (NULL);
     split_coord = ft_split(str, ',');
     if (!split_coord[0] || !split_coord[1] || !split_coord[2] || split_coord[3])
         return (NULL);
-    coordinates[0] = ft_stof(split_coord[0]);
-    coordinates[1] = ft_stof(split_coord[1]);
-    coordinates[2] = ft_stof(split_coord[2]);
+    coordinates->x = ft_stof(split_coord[0]);
+    coordinates->y = ft_stof(split_coord[1]);
+    coordinates->z = ft_stof(split_coord[2]);
     ft_split_del(&split_coord);
-    return (&coordinates[0]);
+    return (coordinates);
 }

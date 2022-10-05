@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/06 14:01:05 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/07 14:50:21 by jmehlig          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minirt.h"
 
 //parser : Einlesen  des Files mit gnl, ueberpruefen ob richtiges Fomrat, richtige Range
@@ -18,18 +6,26 @@
 
 //Annahme: Eingabe erfolgt mit ./minirt file.rt
 
+// malloc protect...
+
+void leaks()
+{
+    system("leaks minirt");
+}
+
 int main(int argc, char *argv[])
 {
-    t_scene scene;
-    t_scene *scene_free;
+    t_scene     scene;
+    t_scene     *scene_free = NULL;
+    t_graphic   graphic;
 
+    atexit(leaks);
     if (argc != 2)
         text_error("Not the right input - must be of form ./minirt file.rt\n");
-    set_scene_null(&scene);
+    set_scene_null(&scene, &graphic);
     parser(&scene, argv[1]);
-    put_scene(scene);
+    scene = built_graphic(scene, graphic);
     scene_free = &scene;
     free_scene(&scene_free);
-    system("leaks minirt");
     return (0);
 }

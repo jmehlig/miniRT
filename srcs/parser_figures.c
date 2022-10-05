@@ -6,7 +6,7 @@
 /*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 20:51:10 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/08/07 15:52:00 by jmehlig          ###   ########.fr       */
+/*   Updated: 2022/09/20 17:23:46 by jmehlig          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,18 @@ t_scene *parse_sphere(t_scene *scene, char **line_split, int fd)
 {
     t_sphere *sphere;
     t_list *new;
+	t_vector *temp;
 
     sphere = malloc(sizeof(t_sphere));
     if (!sphere)
         simple_error_free(scene, line_split, fd);
-    if (!line_split[3] || line_split[4])
+	if (line_split[4] && ft_strncmp(line_split[4], "\n", 1) == 0);
+    else if (!line_split[3] || line_split[4])
         text_error_free("Not the right sp input", scene, line_split, fd);
-    sphere->center = split_coordinates(line_split[1]);
+    temp = split_coordinates(line_split[1]);
+	sphere->center = subtract_vec(temp, scene->camera.origin);
+	//printf("\n%f %f %f\n", sphere->center->x, sphere->center->y, sphere->center->z);
+	free (temp);
     if (!sphere->center)
         text_error_free("'sp': Not the right center input", scene, line_split, fd);
     sphere->diameter = ft_stof(line_split[2]);
@@ -51,7 +56,8 @@ t_scene *parse_plane(t_scene *scene, char **line_split, int fd)
     plane = malloc(sizeof(t_plane));
     if (!plane)
         simple_error_free(scene, line_split, fd);
-    if (!line_split[3] || line_split[4])
+	if (line_split[4] && ft_strncmp(line_split[4], "\n", 1) == 0);
+    else if (!line_split[3] || line_split[4])
         text_error_free("Not the right pl input", scene, line_split, fd);
     plane->coordinates = split_coordinates(line_split[1]);
     if (!plane->coordinates)
@@ -79,7 +85,8 @@ t_scene *parse_cylinder(t_scene *scene, char **line_split, int fd)
     cylinder = malloc(sizeof(t_cylinder));
     if (!cylinder)
         simple_error_free(scene, line_split, fd);
-    if (!line_split[5] || line_split[6])
+	if (line_split[6] && ft_strncmp(line_split[6], "\n", 1) == 0);
+    else if (!line_split[5] || line_split[6])
         text_error_free("Not the right cy input", scene, line_split, fd);
     cylinder->coordinates = split_coordinates(line_split[1]);
     if (!cylinder->coordinates)

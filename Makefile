@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/05/03 16:19:01 by jmehlig           #+#    #+#              #
-#    Updated: 2022/08/06 21:24:27 by jmehlig          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = minirt
 
 SRCS_PATH = srcs/
@@ -24,42 +12,60 @@ SRCS =	main.c \
 		ft_stof.c \
 		parser_utils.c \
 		parser_figures.c \
-		free.c
+		free.c \
+		graphic.c \
+		graphic_utils.c \
+		math.c\
+		intersection.c\
+		intersection_cylinder.c\
+		color.c\
 
-GET_NEXT_LINE_SRCS =	$(GET_NEXT_LINE_PATH)get_next_line.c \
-						$(GET_NEXT_LINE_PATH)get_next_line_utils.c \
+GET_NEXT_LINE_SRCS =	get_next_line.c \
+						get_next_line_utils.c \
 
 LIBFT = ${LIBFT_PATH}libft.a
 
+MLX = $(MLX_PATH)libmlx.a
+
 OBJS_PATH = objs
-OBJS = $(patsubst %.c, %.o, $(SRCS))
+OBJS = $(patsubst $(SRCS_PATH)/%.c, $(OBJS_PATH)/%.o, $(addprefix $(SRCS_PATH), $(SRCS)))
+#$(addprefix $(OBJS_PATH)/, $(SRCS):%.c=%.o))
+
+OBJS_GNL = $(patsubst %.c, %.o, $(GET_NEXT_LINE_SRCS))
 
 LIBFT_PATH	= ./includes/libft/
+
+MLX_PATH = ./minilibx_macos/
 
 CC		=		gcc
 
 CFLAGS	=		-Wall -Wextra -Werror -D BUFFER_SIZE=1
 
-MLXFLAGS =		./minilibx_macos/libmlx.a -framework OpenGL -framework AppKit
+MLXFLAGS =		$(MLX) -framework OpenGL -framework AppKit
 
-all:	$(NAME)
+all:	obj $(NAME)
 
 ${LIBFT}:
 	@make -C $(LIBFT_PATH)
 
-$(NAME): ${LIBFT} $(addprefix $(SRCS_PATH), $(SRCS))
-	$(CC) $(CFLAGS) -c $(GET_NEXT_LINE_SRCS) $(addprefix $(SRCS_PATH), $(SRCS))
+mlx:
+	@make -C $(MLX_PATH)
+
+obj:
 	@mkdir -p $(OBJS_PATH)
-	@mv $(OBJS) $(OBJS_PATH) 
-	$(CC) $(CFLAGS) $(addprefix $(OBJS_PATH)/, $(OBJS)) $(GET_NEXT_LINE_SRCS) ${LIBFT_PATH}libft.a -o $(NAME)
+
+$(NAME): ${LIBFT} $(OBJS)
+	$(CC) $(CFLAGS) -c $(addprefix $(GET_NEXT_LINE_PATH), $(GET_NEXT_LINE_SRCS)) $(addprefix $(SRCS_PATH), $(SRCS))
+	@mv *.o $(OBJS_PATH) 
+	$(CC) $(CFLAGS) $(MLXFLAGS) $(OBJS) $(addprefix $(GET_NEXT_LINE_PATH), $(GET_NEXT_LINE_SRCS)) ${LIBFT_PATH}libft.a -o $(NAME) -I $(MLX_PATH)
 
 clean:
 			make clean -C $(LIBFT_PATH)
 			rm -rf $(OBJS_PATH)
-			rm *.o
 
 fclean_libft:
 			make fclean -C $(LIBFT_PATH)
+
 
 fclean:		clean fclean_libft
 			$(RM) $(NAME)
