@@ -42,9 +42,9 @@ float	cylinder_circle(t_cylinder *cylinder, t_camera	*camera_cpy, t_vector *ray_
 // Look if there is an example that prevents the front cap from printing while executing subject.rt 
 t_vector	*ortho_project_in_plane(t_vector *in, t_vector *normal_vec, t_vector *point)
 {
-	t_vector *project;
-	t_vector *result;
-	float	temp;
+	t_vector 	*project;
+	t_vector 	*result;
+	float		temp;
 
 	project = subtract_vec(in, point);
 	temp = dot_prod_vec(project, normal_vec);
