@@ -39,6 +39,7 @@ float	cylinder_circle(t_cylinder *cylinder, t_camera	*camera_cpy, t_vector *ray_
 
 // Ebene gegeben in Normalform, durch Normalenvektor und Ankerpunkt, Orthogonalprojektion eines Punktes in diese Ebene
 // Was ist mit z == 0???
+// Look if there is an example that prevents the front cap from printing while executing subject.rt 
 t_vector	*ortho_project_in_plane(t_vector *in, t_vector *normal_vec, t_vector *point)
 {
 	t_vector *project;
@@ -71,14 +72,18 @@ t_dist *cylinder_intersect(t_camera *cam, t_vector *ray, t_cylinder *cylinder) /
 		return NULL;
 	init_dist(d);
 	new = 0;
+	// first we project alle needed points into the plane orthogonal to the direction vector of the cylnder (this is the noralvector there)
 	camera_cpy = camera_project(cam, cylinder);
 	ray_cpy = ray_project(ray, cylinder, camera_cpy);
+	// In here we call sphere_intersect, since everything including the ray is now in the same plane, it only shows if we intersect with the projected circle
+	// Therefore if d1 != 0 the original ray intersects with the infinite cylinder
 	d1 = cylinder_circle(cylinder, camera_cpy, ray_cpy);
 	if (d1)
 	{
 		temp = new_vector(camera_cpy->origin->x + ray_cpy->x * d1, camera_cpy->origin->y + ray_cpy->y * d1, camera_cpy->origin->z + ray_cpy->z * d1); //
+		// changes back to the original point and calculates the actual distance, also checks if the intersection with the infinte cylinder is at the actual cylinder
 		new = basis_change_back(temp, cylinder->orientation, ray, cylinder);
-		d->n = subtract_vec(temp, cylinder->coordinates);
+		d->n = subtract_vec(temp, cylinder->coordinates); //Hmm, check tht again, should be the normal vector in the calclated point (needed for the lights)
 		norm_vec(d->n); //
 		ft_free(temp);
 	}
@@ -97,7 +102,7 @@ t_dist *cylinder_intersect(t_camera *cam, t_vector *ray, t_cylinder *cylinder) /
 		new = cylinder_caps('-', ray, cam, cylinder);
 	}
 	d->dist = new;
-	if (d->p) // --->bedenke,das ist Schwachsinn und kreiert momentan Fehler
+	if (d->p) // is that right??
 		ft_free (d->p);
 	d->p = scalar_multi(ray, new);
 	//p.colors = scalar_multi_colors(cylinder->colors, compute_lighting(temp, n, scene.light, scene.ambi_light));
