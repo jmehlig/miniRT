@@ -1,51 +1,56 @@
 #include "minirt.h"
 
-//t_color			color_from_rgb(int r, int g, int b)
-//{
-//    t_color	color;
-//
-//    color.r = r;
-//    color.g = g;
-//    color.b = b;
-//    return (color);
-//}
-//
-//t_color	color_from_hex(int hex)
-//{
-//    t_color	tmp;
-//
-//    tmp.r = ((hex >> 16) & 0xFF);
-//    tmp.g = ((hex >> 8) & 0xFF);
-//    tmp.b = ((hex) & 0xFF);
-//    return (tmp);
-//}
-//
-//int	hex_from_color(t_color color)
-//{
-//    return (color.r * 65536 + color.g * 256 + color.b);
-//}
-
-int	*scalar_multi_colors(int *colors, float a)
+int get_rgba(int r, int g, int b, int a)
 {
-	int *col;
-
-	col = malloc(3 * sizeof(int));
-	if(!col)
-		return 0;
-	col[0] = colors[0] * a;
-	col[1] = colors[1] * a;
-	col[2] = colors[2] * a;
-	return (col);
+    return (r << 24 | g << 16 | b << 8 | a);
 }
 
-int	create_rgb(int r, int g, int b)
+int	set_color(t_minirt *mt, t_dist *dist, float light)
 {
-	return (r << 16 | g << 8 | b);
+	int		res;
+	float	r = 0.0;
+	float	g = 0.0;
+	float	b = 0.0;
+	float	tmp;
+
+	tmp = mt->scene.a_light.color.r * mt->scene.a_light.ratio + light * mt->scene.light.bright * 255.00f;
+	if (tmp > 255.0)
+		tmp = 255.0;
+	if (dist->closest_obj == 1)
+		r = dist->cl_sp->color.r * tmp / 255.0;
+	else if (dist->closest_obj == 2)
+		r = dist->cl_pl->color.r * tmp / 255.0;
+	else if (dist->closest_obj >= 3)
+		r = dist->cl_cy->color.r * tmp / 255.0;
+	tmp = mt->scene.a_light.color.g * mt->scene.a_light.ratio + light * mt->scene.light.bright * 255.00f;
+	if (tmp > 255.0)
+		tmp = 255.0;
+	if (dist->closest_obj == 1)
+		g = dist->cl_sp->color.g * tmp / 255.0;
+	else if (dist->closest_obj == 2)
+		g = dist->cl_pl->color.g * tmp / 255.0;
+	else if (dist->closest_obj >= 3)
+		g = dist->cl_cy->color.g * tmp / 255.0;
+	tmp = mt->scene.a_light.color.b * mt->scene.a_light.ratio + light * mt->scene.light.bright * 255.00f;
+	if (tmp > 255.0)
+		tmp = 255.0;
+	if (dist->closest_obj == 1)
+		b = dist->cl_sp->color.b * tmp / 255.0;
+	else if (dist->closest_obj == 2)
+		b = dist->cl_pl->color.b * tmp / 255.0;
+	else if (dist->closest_obj >= 3)
+		b = dist->cl_cy->color.b * tmp / 255.0;
+	res = get_rgba(r, g, b, 255);
+	return(res);
 }
 
-void	put_pix_to_image(t_graphic *graphic, int color, int x, int y)
+int	draw_pix(t_minirt *mt, t_dist *dist, float int_light)
 {
-	char	*pixel;
-	pixel = graphic->addr + (y * graphic->line_l + x * (graphic->bpp / 8));
-	*(int *)pixel = color;
+	int	res;
+
+	if (dist->closest_obj)
+		res = set_color(mt, dist, int_light);
+	else
+		res = 0xffffe5ff;
+	return (res);
 }

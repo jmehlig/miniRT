@@ -1,9 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory `/Users/kmorunov/Desktop/42/minirt'
-mkdir -p objs
-make -C ./includes/libft/
-gcc -Wall -Wextra -Werror -D BUFFER_SIZE=1 -c ./includes/get_next_line/get_next_line.c ./includes/get_next_line/get_next_line_utils.c srcs/main.c srcs/exit.c srcs/parser.c srcs/image.c srcs/parser_setting.c srcs/ft_stof.c srcs/parser_utils.c srcs/parser_figures.c srcs/free.c srcs/graphic.c srcs/graphic_utils.c srcs/math.c srcs/intersection.c srcs/intersection_cylinder.c srcs/color.c
-mv *.o objs 
-gcc -Wall -Wextra -Werror -D BUFFER_SIZE=1 ./minilibx_macos/libmlx.a -framework OpenGL -framework AppKit srcs/main.c srcs/exit.c srcs/parser.c srcs/image.c srcs/parser_setting.c srcs/ft_stof.c srcs/parser_utils.c srcs/parser_figures.c srcs/free.c srcs/graphic.c srcs/graphic_utils.c srcs/math.c srcs/intersection.c srcs/intersection_cylinder.c srcs/color.c ./includes/get_next_line/get_next_line.c ./includes/get_next_line/get_next_line_utils.c ./includes/libft/libft.a -o minirt -I ./minilibx_macos/
-make: Leaving directory `/Users/kmorunov/Desktop/42/minirt'
- 
