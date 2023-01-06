@@ -1,26 +1,41 @@
-NAME = minirt
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: kmorunov <kmorunov@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/10/30 16:18:20 by kmorunov          #+#    #+#              #
+#    Updated: 2022/10/30 16:18:21 by kmorunov         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+NAME = miniRT
 
 SRCS_PATH = srcs/
 
 GET_NEXT_LINE_PATH = ./includes/get_next_line/
 
 SRCS =	main.c \
+		closest_draw.c \
 		draw.c \
+		draw_objects.c \
 		vector.c \
-		hooks.c \
+		vector2.c \
+		hooks_camrot.c \
+		hooks_camtr.c \
 		intersect.c \
+		intersect2.c \
 		color.c \
 		shadow.c \
+		shadow_sphere.c \
+		shadow_cy.c \
 		parser.c \
 		parser_scene.c \
 		parser_utils.c \
-		ft_stof.c \
 		parser_figures.c \
-#		exit.c \
-		parser_setting.c \
-		parser_utils.c \
-		free.c \
-
+		utils.c \
+		error.c \
 
 GET_NEXT_LINE_SRCS =	get_next_line.c \
 						get_next_line_utils.c \
@@ -37,7 +52,7 @@ OBJS_GNL = $(patsubst %.c, %.o, $(GET_NEXT_LINE_SRCS))
 
 LIBFT_PATH	= ./includes/libft/
 
-MLX_PATH = ./minilibx/
+MLX_PATH = ./MLX42/
 
 CC		=		gcc
 
@@ -46,33 +61,49 @@ CFLAGS	=		-Wall -Wextra -Werror -D BUFFER_SIZE=1
 #MLXFLAGS =		$(MLX) -framework Cocoa -framework OpenGL -framework IOKit
 MLXFLAGS =		-framework Cocoa -framework OpenGL -framework IOKit
 
-all:	obj $(NAME)
+all:	obj $(MLX) $(NAME)
 
 ${LIBFT}:
 	@make -C $(LIBFT_PATH)
 
-mlx:
+$(MLX):
 	@make -C $(MLX_PATH)
 
 obj:
 	@mkdir -p $(OBJS_PATH)
 
-$(NAME): ${LIBFT} $(OBJS)
+$(NAME):	${LIBFT} $(OBJS)
 	$(CC) $(CFLAGS) -c $(addprefix $(GET_NEXT_LINE_PATH), $(GET_NEXT_LINE_SRCS)) $(addprefix $(SRCS_PATH), $(SRCS))
 	@mv *.o $(OBJS_PATH)
 #	$(CC) $(CFLAGS) $(MLXFLAGS) $(OBJS) $(addprefix $(GET_NEXT_LINE_PATH), $(GET_NEXT_LINE_SRCS)) ${LIBFT_PATH}libft.a -o $(NAME) -I $(MLX_PATH)
-#	$(CC) $(CFLAGS) $(MLXFLAGS) $(OBJS) $(addprefix $(GET_NEXT_LINE_PATH), $(GET_NEXT_LINE_SRCS)) ${LIBFT_PATH}libft.a -o $(NAME) ./MLX42/libmlx42.a -I include -lglfw -L "/Users/kmorunov/.brew/opt/glfw/lib/"
-	$(CC) $(CFLAGS) $(MLXFLAGS) $(OBJS) $(addprefix $(GET_NEXT_LINE_PATH), $(GET_NEXT_LINE_SRCS)) ${LIBFT_PATH}libft.a -o $(NAME)
+#	$(CC) $(CFLAGS) $(MLXFLAGS) $(OBJS) $(addprefix $(GET_NEXT_LINE_PATH), $(GET_NEXT_LINE_SRCS)) ${LIBFT_PATH}libft.a -o $(NAME) ./MLX42/libmlx42.a -I include -lglfw -L "/Users/jmehlig/.brew/opt/glfw/lib/"
+	$(CC) $(CFLAGS) $(MLXFLAGS) $(OBJS) $(addprefix $(GET_NEXT_LINE_PATH), $(GET_NEXT_LINE_SRCS)) ${LIBFT_PATH}libft.a -o $(NAME) ./MLX42/libmlx42.a -I include -lglfw -L "/Users/$(USER)/.brew/opt/glfw/lib/"
+#	$(CC) $(CFLAGS) $(MLXFLAGS) $(OBJS) $(addprefix $(GET_NEXT_LINE_PATH), $(GET_NEXT_LINE_SRCS)) ${LIBFT_PATH}libft.a -o $(NAME)
+
+$(OBJS_PATH)/%.o:	$(SRCS_PATH)/%.c
+	$(CC) $(CFLAGS) -c $(addprefix $(GET_NEXT_LINE_PATH), $(GET_NEXT_LINE_SRCS)) $<
+
+install:
+	@if [ -f $(BREWU) ];then \
+		brew install glfw; \
+		echo "$(GREEN)Brew is already installed.\n$(WHITE)";else \
+		echo "$(YELL)Installing Brew:\n$(WHITE)"; \
+		curl -fsSL https://rawgit.com/kube/42homebrew/master/install.sh | zsh; \
+		brew install glfw; \
+		@mv /Users/${USER}/.brew/opt/glfw/include/GLFW ./MLX42/include
+		echo "$(GREEN)Brew is now installed.\n$(WHITE)"; \
+	fi;
 
 clean:
 			make clean -C $(LIBFT_PATH)
 			rm -rf $(OBJS_PATH)
 
 fclean_libft:
-			make fclean -C $(LIBFT_PATH)
+			@make fclean -C $(LIBFT_PATH)
 
 
 fclean:		clean fclean_libft
+			@make fclean -C $(MLX_PATH)
 			$(RM) $(NAME)
 
 re:			fclean

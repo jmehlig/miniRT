@@ -6,7 +6,7 @@
 #    By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/03 16:05:55 by jmehlig           #+#    #+#              #
-#    Updated: 2022/08/26 16:51:29 by jmehlig          ###   ########.fr        #
+#    Updated: 2022/10/30 17:13:17 by jmehlig          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,6 @@ SRCS	=		ft_atoi.c \
 				ft_putnbr_fd.c \
 				ft_putstr_fd.c \
 				ft_split.c \
-				ft_split_multi.c \
 				ft_strchr.c \
 				ft_strdup.c \
 				ft_strjoin.c \
@@ -70,9 +69,10 @@ SRCS	=		ft_atoi.c \
 				ft_remove_characters.c \
 				ft_lstdelkey.c \
 				ft_iswhitespace.c \
-				ft_compare_float.c \
+				ft_comp_float.c \
 				ft_f_less_f.c \
-				ft_f_greater_f.c
+				ft_f_greater_f.c \
+				ft_len_double.c
 
 OBJS	=		$(SRCS:.c=.o)
 
@@ -86,6 +86,10 @@ BSRCS	=		ft_lstnew.c \
 				ft_lstiter.c \
 				ft_lstmap.c \
 
+GREEN = \033[1;32m
+
+WHITE = \033[0m
+
 BOBJS	=		$(BSRCS:.c=.o)
 
 CC		=		gcc
@@ -97,19 +101,20 @@ AR		=		ar rc
 RM		=		rm -f
 
 .c.o:
-			$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
+			@$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
 
 $(NAME):	$(OBJS)
-			$(AR) $(NAME) $(OBJS)
+			@$(AR) $(NAME) $(OBJS)
+			@echo "$(GREEN)libft compiled!\n$(WHITE)"; \
 
 bonus:		$(NAME) $(BOBJS)
 			$(AR) $(NAME) $(BOBJS)
 
 clean:
-			$(RM) $(OBJS) $(BOBJS)
+			@$(RM) $(OBJS) $(BOBJS)
 
 fclean:		clean
-			$(RM) $(NAME)
+			@$(RM) $(NAME)
 
 all:		$(NAME)
 

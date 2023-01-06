@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_f_greater_f.c                                   :+:      :+:    :+:   */
+/*   ft_len_double.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmehlig <jmehlig@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kmorunov <kmorunov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/06 16:38:58 by jmehlig           #+#    #+#             */
-/*   Updated: 2022/10/23 14:48:34 by jmehlig          ###   ########.fr       */
+/*   Created: 2022/10/30 17:09:44 by jmehlig           #+#    #+#             */
+/*   Updated: 2022/10/30 17:30:10 by kmorunov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_f_greater_f(float f1, float f2)
+int	ft_len_double(char **str)
 {
-	float	precision;
+	int	i;
 
-	precision = 0.00001;
-	if (((f1 - precision) > f2))
-		return (1);
-	else
-		return (0);
+	i = 0;
+	while (str[i] != NULL)
+		i++;
+	return (i);
 }
